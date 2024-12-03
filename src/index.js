@@ -5,5 +5,5 @@ import {init,getId,getList,setId,setList} from "./localStorage";
 import { createItem,deleteItem } from "./Methods";
 
 import "./styles.css";
-
+import "./sidebar.css";
 
