@@ -83,6 +83,7 @@ img,svg{
     color: var(--text-color);
     border: 1px solid black;
     border-radius: 6px;
+    width: 40px;
     margin-left: auto;
 }
 .edit{

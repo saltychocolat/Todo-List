@@ -41,7 +41,7 @@
                         <button class="createProject">+</button>
                     </div>
                     <button class="buttonTask">
-                        <img src="/icons/screwdriver-wrench-solid.svg">
+                        <img class="screw" src="/icons/screwdriver-wrench-solid.svg">
                         My Homework
                         <img class="edit" src="/icons/edit.svg">
                         <img class="delete" src="/icons/trash-solid.svg">
@@ -55,6 +55,20 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="dialog hide">
+        <form>
+            <div class="formHeader">
+                <div class="formTitle">Add Project</div>
+                <button class="closeForm">X</button>
+            </div>
+            <div class="label">Title:</div>
+            <input type="text" id="title">
+            <div class="formButtons">
+                <button class="cancelForm">Cancel</button>
+                <button type="submit" class="submitForm">Add</button>
+            </div>
+        </form>
     </div>
 </body>
 </html>

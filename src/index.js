@@ -1,9 +1,30 @@
-import todoItem from "./todoItem";
-import todoProject from "./todoProject";
+
 import { compareAsc, format } from "date-fns";
-import {init,getId,getList,setId,setList} from "./localStorage";
-import { createItem,deleteItem } from "./Methods";
+import {init,getId,getList,setId,setList,setProjects,getProjects} from "./localStorage";
+import { createItem,deleteItem,createProject,renderProjects } from "./Methods";
+import {getDom,closeDialog} from "./DomMethods";
 
 import "./styles.css";
 import "./sidebar.css";
+import "./dialog.css";
 
+
+let DomItems  = getDom();
+
+document.addEventListener("click",function(event){
+    let target = event.target;
+    if(target.tagName=="BUTTON")
+        event.preventDefault();
+    if(target.classList.contains("closeForm") ||target.classList.contains("cancelForm"))
+        closeDialog();
+})
+
+DomItems.createProjectBtn.addEventListener("click",function(){
+    DomItems.dialog.classList.remove("hide");
+})
+
+
+init();
+createProject("Ana",[]);
+
+renderProjects();
