@@ -1,7 +1,7 @@
 function init(){
     let id = 0;
     let todoList = [];
-    let projects = [];
+    let projects = [{name:"My Homework",todo:[]}];
     localStorage.setItem("todoList",JSON.stringify(todoList));
     localStorage.setItem("id",JSON.stringify(id));
     localStorage.setItem("projects",JSON.stringify(projects));

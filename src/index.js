@@ -1,7 +1,7 @@
 
 import { compareAsc, format } from "date-fns";
 import {init,getId,getList,setId,setList,setProjects,getProjects} from "./localStorage";
-import { createItem,deleteItem,createProject,renderProjects } from "./Methods";
+import { createItem,deleteItem,createProject,renderProjects,submitForm } from "./Methods";
 import {getDom,closeDialog} from "./DomMethods";
 
 import "./styles.css";
@@ -23,6 +23,10 @@ DomItems.createProjectBtn.addEventListener("click",function(){
     DomItems.dialog.classList.remove("hide");
 })
 
+DomItems.submitFormBtn.addEventListener("click",function(){
+    submitForm();
+    renderProjects();
+})
 
 init();
 createProject("Ana",[]);

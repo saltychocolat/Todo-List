@@ -59,6 +59,20 @@ function createProject(name,todo){
 }
 function renderProjects(){
     let projects = getProjects();
+    let children  = DomItems.projects.children;
+    let projectsTitle = DomItems.projectsTitle;
+    projectsTitle.textContent = `Projects(${projects.length})`;
+
+
+    if(children.length>1){
+        for(let i=1;i<projects.length;i++){
+            if(children[children.length-1].classList.contains("buttonTask"))
+                children[children.length-1].remove();
+        }
+    }
+
+
+
     for(let i=0;i<projects.length;i++){
         let item = projects[i];
 
@@ -86,5 +100,13 @@ function renderProjects(){
     }
 }
 
+function submitForm(){
+    let title = DomItems.projectFormTitle;
+    title = title.value;
 
-export {createItem,deleteItem,createProject,renderProjects};
+    createProject(title,[]);
+    closeDialog();
+}
+
+
+export {createItem,deleteItem,createProject,renderProjects,submitForm};
