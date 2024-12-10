@@ -1,10 +1,10 @@
 function init(){
     let id = 0;
     let todoList = [];
-    let projects = [{name:"My Homework",todo:[]}];
-    let temp = {name:null};
+    let projects = [{id:0,name:"My Homework",todo:[2]}];
+    let temp = {ProjectId:null};
     localStorage.setItem("todoList",JSON.stringify(todoList));
-    localStorage.setItem("id",JSON.stringify(id));
+    localStorage.setItem("id",JSON.stringify(++id));
     localStorage.setItem("projects",JSON.stringify(projects));
     localStorage.setItem("temp",JSON.stringify(temp));
 }

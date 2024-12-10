@@ -10,7 +10,7 @@ import "./dialog.css";
 
 
 const actionMap = {
-    delete: (target) => deleteProject(target.parentElement.textContent),
+    delete: (target) => deleteProject(target.parentElement.id),
     closeForm: closeDialog,
     cancelForm: closeDialog,
     createProject: (target  ) => createForm("add",target),
@@ -46,6 +46,6 @@ document.addEventListener("click", function(event) {
 });
 
 init();
-createProject("Ana",["2"]);
+
 
 renderProjects();

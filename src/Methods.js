@@ -22,9 +22,10 @@ class todoItem{
 
 }
 class todoProject{
-    constructor(name,todo){
+    constructor(id,name,todo){
+        this.id = id;
         this.name = name;
-        this.todo = todo
+        this.todo = todo;
     }   
 }
 
@@ -50,21 +51,21 @@ function deleteItem(id){
     }
     setList(todoList);
 }
-function deleteProject(name){
+function deleteProject(id){
     let projects  = getProjects();
     for(let i=0;i<projects.length;i++){
-        if(projects[i].name ==name){
+        if(projects[i].id ==id){
             projects.splice(i,1);
         }
     }
     setProjects(projects);
     renderProjects();
 }
-function createProject(name,todo){
-    let project = new todoProject(name,todo); 
+function createProject(id,name,todo){
+    let project = new todoProject(id,name,todo); 
     let projects = getProjects();
 
-    projects.push({name:project.name,todo:project.todo})
+    projects.push({id:id,name:project.name,todo:project.todo})
 
     setProjects(projects);
 }
@@ -91,6 +92,8 @@ function renderProjects(){
 
         let btn = document.createElement("button");
         btn.classList.add("buttonTask");
+        btn.id = item.id;
+
         let textNode = document.createTextNode(item.name);
 
         let screw = document.createElement("img");
@@ -116,9 +119,11 @@ function renderProjects(){
 function submitProjectForm(){
     let DomItems = getDom();
     let title = DomItems.projectInputTitle;
+    let id = getId();
     title = title.value;
 
-    createProject(title,[]);
+    createProject(id,title,[]);
+    setId(++id);
     closeDialog();
 }
 
@@ -127,7 +132,7 @@ function editProject(){
     let projects = getProjects();
 
     for(let i =0;i<projects.length;i++){
-        if(projects[i].name==getTemp().name){
+        if(projects[i].id == getTemp().ProjectId){
             projects[i].name = DomItems.projectInputTitle.value;
         }
     }

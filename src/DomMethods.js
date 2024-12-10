@@ -64,7 +64,7 @@ function createForm(mode,target){
             break;
         case "edit":
             let temp = getTemp();
-            temp.name = target.parentElement.textContent;
+            temp.ProjectId = target.parentElement.id;
             setTemp(temp)
             projectInputTitle.value = target.parentElement.textContent;
             projectFormTitle.textContent="Edit Project";
