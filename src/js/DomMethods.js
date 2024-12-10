@@ -4,6 +4,8 @@ let DomItems = getDom();
 
 
 function getDom(){
+    let content = document.querySelector(".content");
+    let wrapper = document.querySelector(".wrapper");
     let createProjectBtn = document.querySelector(".createProject");
     let dialog = document.querySelector(".dialog");
     let form = document.querySelector("form");
@@ -13,7 +15,7 @@ function getDom(){
     let projectInputTitle = document.querySelector("#projectInputTitle");
     let projectFormTitle = document.querySelector(".projectFormTitle")
     let editForm = document.querySelector("#edit")
-    return {createProjectBtn:createProjectBtn,dialog:dialog,form:form,projects:projects,projectInputTitle:projectInputTitle,
+    return {content:content,wrapper:wrapper,createProjectBtn:createProjectBtn,dialog:dialog,form:form,projects:projects,projectInputTitle:projectInputTitle,
         submitProjectFormBtn:submitProjectFormBtn,projectsTitle:projectsTitle,editForm:editForm,projectFormTitle:projectFormTitle};
 }
 

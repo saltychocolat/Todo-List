@@ -1,9 +1,9 @@
 
 import {init,getId,getList,setId,setList,setProjects,getProjects, getTemp} from "./localStorage";
 import {getDom,closeDialog} from "./DomMethods"
-import screwIconPath from "../icons/screwdriver-wrench-solid.svg";
-import editIconPath from "../icons/edit.svg";
-import trashIconPath from "../icons/trash-solid.svg";   
+import screwIconPath from "../../icons/screwdriver-wrench-solid.svg";
+import editIconPath from "../../icons/edit.svg";
+import trashIconPath from "../../icons/trash-solid.svg";   
 
 
 

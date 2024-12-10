@@ -19,6 +19,8 @@
     display: flex;
     flex-direction: column;
 }
+
+
 .buttonTask{
     margin-bottom: 20px;
     display: flex;
@@ -34,6 +36,24 @@
 }
 
 .buttonTask:hover{
+    border: 2px solid var(--color);
+
+}
+.buttonCategory{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    color: var(--text-color);
+    background-color: white;
+    border-radius: 7px;
+    height: 50px;
+    padding-left: 20px;
+    border: 0px solid black;
+    text-align: left;
+    font-size: 15px;
+}
+
+.buttonCategory:hover{
     border: 2px solid var(--color);
 
 }

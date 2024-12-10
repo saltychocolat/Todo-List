@@ -37,3 +37,8 @@ html,body{
     align-items: center;
 }
 
+.content{
+    width: 70%;
+    justify-self: center;
+    margin-left: 80px;
+}
