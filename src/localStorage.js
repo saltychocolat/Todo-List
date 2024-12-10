@@ -2,9 +2,11 @@ function init(){
     let id = 0;
     let todoList = [];
     let projects = [{name:"My Homework",todo:[]}];
+    let temp = {name:null};
     localStorage.setItem("todoList",JSON.stringify(todoList));
     localStorage.setItem("id",JSON.stringify(id));
     localStorage.setItem("projects",JSON.stringify(projects));
+    localStorage.setItem("temp",JSON.stringify(temp));
 }
 
 function getId(){
@@ -29,4 +31,13 @@ function setProjects(projects){
     localStorage.setItem("projects",JSON.stringify(projects));
 }
 
-export {init,getId,getList,setId,setList,setProjects,getProjects};
+function getTemp(){
+    let temp = localStorage.getItem("temp");
+    return JSON.parse(temp);
+}
+
+function setTemp(temp){
+    localStorage.setItem("temp",JSON.stringify(temp));
+}
+
+export {init,getId,getList,setId,setList,setProjects,getProjects,getTemp,setTemp};

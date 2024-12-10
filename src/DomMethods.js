@@ -1,3 +1,5 @@
+import {init,getId,getList,setId,setList,setProjects,getProjects,getTemp,setTemp} from "./localStorage";
+
 let DomItems = getDom();
 
 
@@ -61,10 +63,12 @@ function createForm(mode,target){
             submitProjectForm.textContent="Add";
             break;
         case "edit":
+            let temp = getTemp();
+            temp.name = target.parentElement.textContent;
+            setTemp(temp)
             projectInputTitle.value = target.parentElement.textContent;
             projectFormTitle.textContent="Edit Project";
             submitProjectForm.textContent="Edit";
-            submitProjectForm.id =target.parentElement.textContent;
 
     }
 

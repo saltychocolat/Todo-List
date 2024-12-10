@@ -22,7 +22,7 @@ const actionMap = {
                 renderProjects();
                 break;
             case "Edit":
-                editProject(target.id);
+                editProject();
                 break;
         }
     }
@@ -46,6 +46,6 @@ document.addEventListener("click", function(event) {
 });
 
 init();
-createProject("Ana",[]);
+createProject("Ana",["2"]);
 
 renderProjects();

@@ -1,5 +1,5 @@
 
-import {init,getId,getList,setId,setList,setProjects,getProjects} from "./localStorage";
+import {init,getId,getList,setId,setList,setProjects,getProjects, getTemp} from "./localStorage";
 import {getDom,closeDialog} from "./DomMethods"
 import screwIconPath from "../icons/screwdriver-wrench-solid.svg";
 import editIconPath from "../icons/edit.svg";
@@ -122,12 +122,12 @@ function submitProjectForm(){
     closeDialog();
 }
 
-function editProject(textContent){
+function editProject(){
     let DomItems = getDom();
     let projects = getProjects();
 
     for(let i =0;i<projects.length;i++){
-        if(projects[i].name==textContent){
+        if(projects[i].name==getTemp().name){
             projects[i].name = DomItems.projectInputTitle.value;
         }
     }
