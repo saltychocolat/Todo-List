@@ -7,7 +7,7 @@ import trashIconPath from "../icons/trash-solid.svg";
 
 
 
-let DomItems = getDom();
+
 
 
 class todoItem{
@@ -30,6 +30,7 @@ class todoProject{
 
 
 function createItem(title,description,dueDate,priority,hasDone,project){
+    
     let item = new todoItem(title,description,dueDate,priority,hasDone,project);
 
     let todoList = getList();
@@ -49,6 +50,16 @@ function deleteItem(id){
     }
     setList(todoList);
 }
+function deleteProject(name){
+    let projects  = getProjects();
+    for(let i=0;i<projects.length;i++){
+        if(projects[i].name ==name){
+            projects.splice(i,1);
+        }
+    }
+    setProjects(projects);
+    renderProjects();
+}
 function createProject(name,todo){
     let project = new todoProject(name,todo); 
     let projects = getProjects();
@@ -57,21 +68,23 @@ function createProject(name,todo){
 
     setProjects(projects);
 }
+
+
 function renderProjects(){
+    let DomItems = getDom();
     let projects = getProjects();
     let children  = DomItems.projects.children;
     let projectsTitle = DomItems.projectsTitle;
     projectsTitle.textContent = `Projects(${projects.length})`;
 
+    let len = children.length;
 
-    if(children.length>1){
-        for(let i=1;i<projects.length;i++){
+    if(len>1){
+        for(let i=1;i<len;i++){
             if(children[children.length-1].classList.contains("buttonTask"))
                 children[children.length-1].remove();
         }
     }
-
-
 
     for(let i=0;i<projects.length;i++){
         let item = projects[i];
@@ -85,7 +98,7 @@ function renderProjects(){
         screw.src = screwIconPath;
 
         let edit = document.createElement("img");
-        edit.classList.add("edit");
+        edit.classList.add("editImg");
         edit.src = editIconPath;
 
         let bin = document.createElement("img");
@@ -100,13 +113,27 @@ function renderProjects(){
     }
 }
 
-function submitForm(){
-    let title = DomItems.projectFormTitle;
+function submitProjectForm(){
+    let DomItems = getDom();
+    let title = DomItems.projectInputTitle;
     title = title.value;
 
     createProject(title,[]);
     closeDialog();
 }
 
+function editProject(textContent){
+    let DomItems = getDom();
+    let projects = getProjects();
 
-export {createItem,deleteItem,createProject,renderProjects,submitForm};
+    for(let i =0;i<projects.length;i++){
+        if(projects[i].name==textContent){
+            projects[i].name = DomItems.projectInputTitle.value;
+        }
+    }
+    setProjects(projects);
+    renderProjects();
+    closeDialog();
+}
+
+export {editProject,createItem,deleteItem,deleteProject,createProject,renderProjects,submitProjectForm,};
