@@ -11,13 +11,14 @@ import trashIconPath from "../../icons/trash-solid.svg";
 
 
 class todoItem{
-    constructor(title,description,dueDate,priority,hasDone,project){
+    constructor(itemId,title,description,dueDate,priority,hasDone,projectId){
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
         this.hasDone = hasDone;
-        this.project = project;
+        this.projectId = projectId;
+        this.itemId = itemId;
     }
 
 }
@@ -32,15 +33,16 @@ class todoProject{
 
 function createItem(title,description,dueDate,priority,hasDone,project){
     
-    let item = new todoItem(title,description,dueDate,priority,hasDone,project);
 
-    let todoList = getList();
-    let id = getId();
+    let projects  = getProjects();
 
-    todoList.push({id:id,item:item});
+    for(let i=0;i<projects.length;i++){
+        if(projects[i].id == project){
+            projects[i].todo.push(new todoItem(projects[i].todo.length,title,description,dueDate,priority,hasDone,projects[i].id));
 
-    setList(todoList);
-    setId(++id);
+        }
+    }
+    setProjects(projects);
 }
 function deleteItem(id){
     let todoList = getList();
@@ -141,4 +143,86 @@ function editProject(){
     closeDialog();
 }
 
-export {editProject,createItem,deleteItem,deleteProject,createProject,renderProjects,submitProjectForm,};
+function renderTasks(target){
+    let DomItems = getDom();
+    DomItems.content.remove();
+
+    let content = document.createElement("div");
+    content.classList.add("content");
+    
+    let contentTitle = document.createElement("div");
+    contentTitle.classList.add("contentTitle");
+
+
+    let tasksHeader = document.createElement("div");
+    tasksHeader.classList.add("tasksHeader");
+
+    let tasksTitle = document.createElement("div");
+    tasksTitle.classList.add("tasksTitle");
+
+    let createTask = document.createElement("button");
+    createTask.classList.add("createTask");
+    createTask.textContent = "+";
+
+    let targetid = target.id;
+    let projects = getProjects();
+    let todo=null;
+
+
+
+    for(let i=0;i<projects.length;i++){
+        if(projects[i].id==targetid){
+            todo = projects[i].todo;
+            contentTitle.textContent=projects[i].name;
+            tasksTitle.textContent= `Tasks(${projects[i].todo.length})`
+
+
+        }
+    }
+
+    tasksHeader.appendChild(tasksTitle);
+    tasksHeader.appendChild(createTask);
+
+    content.appendChild(contentTitle);
+    content.appendChild(tasksHeader);
+    if(todo){
+        for(let i=0;i<todo.length;i++)
+            renderTask(todo[i],content);
+
+    }
+    DomItems.wrapper.appendChild(content);
+
+}
+
+function renderTask(task,content){
+    let taskDiv = document.createElement("div");
+    taskDiv.classList.add("taskDiv");
+    taskDiv.id = task.itemId;
+
+    let taskDivText = document.createElement("div");
+    taskDivText.textContent = task.title;
+
+
+    let dueDate = document.createElement("div");
+    dueDate.classList.add("dueDate");
+    dueDate.textContent = task.dueDate;
+
+    let editTask = document.createElement("img");
+    editTask.classList.add("editTask");
+    editTask.src =  screwIconPath;
+
+    let deleteTask = document.createElement("img");
+    deleteTask.classList.add("deleteTask");
+    deleteTask.src = trashIconPath;
+
+
+    taskDiv.appendChild(taskDivText);
+    taskDiv.appendChild(dueDate);
+    taskDiv.appendChild(editTask);
+    taskDiv.appendChild(deleteTask);
+
+    content.appendChild(taskDiv);
+}
+
+
+export {renderTask,renderTasks,editProject,createItem,deleteItem,deleteProject,createProject,renderProjects,submitProjectForm,};

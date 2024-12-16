@@ -4,6 +4,7 @@ let DomItems = getDom();
 
 
 function getDom(){
+    let contentTitle = document.querySelector(".contentTitle");
     let content = document.querySelector(".content");
     let wrapper = document.querySelector(".wrapper");
     let createProjectBtn = document.querySelector(".createProject");
@@ -15,7 +16,7 @@ function getDom(){
     let projectInputTitle = document.querySelector("#projectInputTitle");
     let projectFormTitle = document.querySelector(".projectFormTitle")
     let editForm = document.querySelector("#edit")
-    return {content:content,wrapper:wrapper,createProjectBtn:createProjectBtn,dialog:dialog,form:form,projects:projects,projectInputTitle:projectInputTitle,
+    return {contentTitle:contentTitle,content:content,wrapper:wrapper,createProjectBtn:createProjectBtn,dialog:dialog,form:form,projects:projects,projectInputTitle:projectInputTitle,
         submitProjectFormBtn:submitProjectFormBtn,projectsTitle:projectsTitle,editForm:editForm,projectFormTitle:projectFormTitle};
 }
 
@@ -56,13 +57,25 @@ function createForm(mode,target){
     cancelForm.textContent = "Cancel";
 
     let submitProjectForm = document.createElement("button");
-    submitProjectForm.classList.add("submitProjectForm");
 
 
     switch (mode){
         case "add":
             projectFormTitle.textContent="Add Project";
             submitProjectForm.textContent="Add";
+            submitProjectForm.classList.add("submitProjectForm");
+
+            formHeader.appendChild(projectFormTitle);
+            formHeader.appendChild(closeForm);
+        
+            formButtons.appendChild(cancelForm);
+            formButtons.appendChild(submitProjectForm);
+        
+            form.appendChild(formHeader);
+            form.appendChild(label);
+            form.appendChild(projectInputTitle);
+            form.appendChild(formButtons);
+        
             break;
         case "edit":
             let temp = getTemp();
@@ -71,20 +84,76 @@ function createForm(mode,target){
             projectInputTitle.value = target.parentElement.textContent;
             projectFormTitle.textContent="Edit Project";
             submitProjectForm.textContent="Edit";
+            submitProjectForm.classList.add("editProjectForm");
+
+            formHeader.appendChild(projectFormTitle);
+            formHeader.appendChild(closeForm);
+        
+            formButtons.appendChild(cancelForm);
+            formButtons.appendChild(submitProjectForm);
+        
+            form.appendChild(formHeader);
+            form.appendChild(label);
+            form.appendChild(projectInputTitle);
+            form.appendChild(formButtons);
+            break;
+        
+        case "task":
+            projectFormTitle.textContent="Add Task";
+            submitProjectForm.textContent="Add Task";
+            submitProjectForm.classList.add("submitTaskForm");
+
+            let label2 = document.createElement("label");
+            label2.classList.add("label");
+            label2.textContent = "Description";
+            label.appendChild(label2);
+            let description = document.createElement("input");
+            description.type = "text";
+            description.id = "description";
+
+            let label3 = document.createElement("label");
+            label3.classList.add("label");
+            label3.textContent = "Due Date:";
+            let dueDate = document.createElement("input");
+            dueDate.type = "text";
+            dueDate.id = "dueDate";
+
+            let label4 = document.createElement("label");
+            label4.classList.add("label");
+            label4.textContent = "Priority:";
+            let priority = document.createElement("input");
+            priority.type = "text";
+            priority.id = "priority";
+            
+
+
+            formHeader.appendChild(projectFormTitle);
+            formHeader.appendChild(closeForm);
+        
+            formButtons.appendChild(cancelForm);
+            formButtons.appendChild(submitProjectForm);
+        
+            form.appendChild(formHeader);
+
+            form.appendChild(label);
+            form.appendChild(projectInputTitle);
+
+            form.appendChild(label2);
+            form.appendChild(description);
+
+            form.appendChild(label3);
+            form.appendChild(dueDate);
+
+            form.appendChild(label4);
+            form.appendChild(priority);
+
+            form.appendChild(formButtons);
+        
+            break;
 
     }
 
-    formHeader.appendChild(projectFormTitle);
-    formHeader.appendChild(closeForm);
-
-    formButtons.appendChild(cancelForm);
-    formButtons.appendChild(submitProjectForm);
-
-    form.appendChild(formHeader);
-    form.appendChild(label);
-    form.appendChild(projectInputTitle);
-    form.appendChild(formButtons);
-
+   
     dialog.appendChild(form);
 
     document.body.appendChild(dialog);

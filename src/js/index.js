@@ -1,7 +1,7 @@
 
 import { compareAsc, format } from "date-fns";
 import {init,getId,getList,setId,setList,setProjects,getProjects} from "./localStorage";
-import {editProject,deleteProject,createItem,deleteItem,createProject,renderProjects,submitProjectForm } from "./Methods";
+import {renderTask,renderTasks,editProject,deleteProject,createItem,deleteItem,createProject,renderProjects,submitProjectForm } from "./Methods";
 import {getDom,closeDialog,createForm} from "./DomMethods";
 
 import "../css/dialog.css";
@@ -13,25 +13,36 @@ import screwIconPath from "../../icons/screwdriver-wrench-solid.svg";
 import editIconPath from "../../icons/edit.svg";
 import trashIconPath from "../../icons/trash-solid.svg";   
 
-
+let lasttarget = null;
 const actionMap = {
     delete: (target) => deleteProject(target.parentElement.id),
+    deleteTask:(target)=>{
+        deleteTask(target.parentElement.id,lasttarget)
+        renderTasks(lasttarget);
+    },
     closeForm: closeDialog,
     cancelForm: closeDialog,
     createProject: (target  ) => createForm("add",target),
     editImg: (target) => createForm("edit",target),
-    submitProjectForm: (target) => {
-        switch(target.textContent){
-            case "Add":
-                submitProjectForm();
-                renderProjects();
-                break;
-            case "Edit":
-                editProject();
-                break;
-        }
+    createTask:(target)=>{
+        createForm("task",target)
     },
-    buttonTask:(target)=>renderTasks(target)
+    submitProjectForm: () => {
+        submitProjectForm();
+        renderProjects();
+    },
+    editProjectForm:(target)=>{
+        editProject();
+        renderTasks(target)
+    },
+    submitTaskForm:()=>{
+        submitTaskForm();
+        renderTasks(lasttarget);
+    },
+    buttonTask:(target)=>{
+        lasttarget = target;
+        renderTasks(target)
+    },
 
 };
 
@@ -56,87 +67,28 @@ document.addEventListener("click", function(event) {
     }
 });
 
-function renderTasks(target){
-    let DomItems = getDom();
-    DomItems.content.remove();
+function submitTaskForm(){
 
-    let content = document.createElement("div");
-    content.classList.add("content");
-    
-    let contentTitle = document.createElement("div");
-    contentTitle.classList.add("contentTitle");
-
-
-    let tasksHeader = document.createElement("div");
-    tasksHeader.classList.add("tasksHeader");
-
-    let tasksTitle = document.createElement("div");
-    tasksTitle.classList.add("tasksTitle");
-
-    let createTask = document.createElement("button");
-    createTask.classList.add("createTask");
-    createTask.textContent = "+";
-
-    let targetid = target.id;
+    let title = document.querySelector("#projectInputTitle");
+    let description = document.querySelector("#description");
+    let dueDate = document.querySelector("#dueDate");
+    let priority = document.querySelector("#priority");
+    createItem(title.value,description.value,dueDate.value,priority.value,false,lasttarget.id);
+    closeDialog();
+}
+function deleteTask(itemId,lasttarget){
     let projects = getProjects();
-    let todo=null;
-
-
-
     for(let i=0;i<projects.length;i++){
-        if(projects[i].id==targetid){
-            todo = projects[i].todo;
-            contentTitle.textContent=projects[i].name;
-            tasksTitle.textContent= `Tasks(${projects[i].todo.length})`
-
-
+        if(projects[i].id==lasttarget.id ){
+            for(let j=0;j<projects[i].todo.length;j++)
+                if(projects[i].todo[j].itemId == itemId){
+                    projects[i].todo.splice(j,1);
+                }
         }
     }
-
-    tasksHeader.appendChild(tasksTitle);
-    tasksHeader.appendChild(createTask);
-
-    content.appendChild(contentTitle);
-    content.appendChild(tasksHeader);
-    if(todo){
-        for(let i=0;i<todo.length;i++)
-            renderTask(todo[i],content);
-
-    }
-    DomItems.wrapper.appendChild(content);
+    setProjects(projects);
 
 }
-
-function renderTask(task,content){
-    let taskDiv = document.createElement("div");
-    taskDiv.classList.add("taskDiv");
-
-    let taskDivText = document.createElement("div");
-    taskDivText.textContent = task.title;
-
-
-    let dueDate = document.createElement("div");
-    dueDate.classList.add("dueDate");
-    dueDate.textContent = task.dueDate;
-
-    let editTask = document.createElement("img");
-    editTask.classList.add("editTask");
-    editTask.src =  screwIconPath;
-
-    let deleteTask = document.createElement("img");
-    deleteTask.classList.add("deleteTask");
-    deleteTask.src = trashIconPath;
-
-
-    taskDiv.appendChild(taskDivText);
-    taskDiv.appendChild(dueDate);
-    taskDiv.appendChild(editTask);
-    taskDiv.appendChild(deleteTask);
-
-    content.appendChild(taskDiv);
-}
-
-
 
 init();
 
