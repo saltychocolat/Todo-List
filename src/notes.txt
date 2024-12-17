@@ -1,0 +1,31 @@
+Index.js
+    doc mappat cu functii numite sugestiv
+    init al localstorage
+
+Methods.js
+    declararea clasei item si proiect 
+    proiect 
+        Id
+        todo
+    item
+        itemId
+        proiectId
+        etc
+    creare editare stergere de proiecte taskuri
+
+DomMethods.js
+    adresa elemente doc
+    inchiderea dialog
+    crearea formului de proiect/task/editare
+
+localstorage.js
+    init al storageului
+    functii de get si set pentru Proiecete ,Id-pentru numerotarea proiectelor ,Temp pentru salvarea numelui folosit inainte de editarea acestuia
+
+
+
+!!!! todo
+
+requiered/ check data descriptie titlu
+edit task - createform(edit)
+categorii - sortare datefn dupa data

@@ -1,10 +1,10 @@
 
 import {init,getId,getList,setId,setList,setProjects,getProjects, getTemp} from "./localStorage";
-import {getDom,closeDialog} from "./DomMethods"
+import {getDom,closeDialog,createForm} from "./DomMethods"
 import screwIconPath from "../../icons/screwdriver-wrench-solid.svg";
 import editIconPath from "../../icons/edit.svg";
 import trashIconPath from "../../icons/trash-solid.svg";   
-
+import { format, compareAsc } from "date-fns";
 
 
 
@@ -30,6 +30,7 @@ class todoProject{
     }   
 }
 
+//item
 
 function createItem(title,description,dueDate,priority,hasDone,project){
     
@@ -44,6 +45,7 @@ function createItem(title,description,dueDate,priority,hasDone,project){
     }
     setProjects(projects);
 }
+
 function deleteItem(id){
     let todoList = getList();
     for(let i=0;i<todoList.length;i++){
@@ -53,6 +55,18 @@ function deleteItem(id){
     }
     setList(todoList);
 }
+
+
+//project
+function createProject(id,name,todo){
+    let project = new todoProject(id,name,todo); 
+    let projects = getProjects();
+
+    projects.push({id:id,name:project.name,todo:project.todo})
+
+    setProjects(projects);
+}
+
 function deleteProject(id){
     let projects  = getProjects();
     for(let i=0;i<projects.length;i++){
@@ -63,15 +77,6 @@ function deleteProject(id){
     setProjects(projects);
     renderProjects();
 }
-function createProject(id,name,todo){
-    let project = new todoProject(id,name,todo); 
-    let projects = getProjects();
-
-    projects.push({id:id,name:project.name,todo:project.todo})
-
-    setProjects(projects);
-}
-
 
 function renderProjects(){
     let DomItems = getDom();
@@ -103,11 +108,11 @@ function renderProjects(){
         screw.src = screwIconPath;
 
         let edit = document.createElement("img");
-        edit.classList.add("editImg");
+        edit.classList.add("editProject");
         edit.src = editIconPath;
 
         let bin = document.createElement("img");
-        bin.classList.add("delete");
+        bin.classList.add("deleteProject");
         bin.src = trashIconPath;
 
         btn.append(screw);
@@ -116,17 +121,6 @@ function renderProjects(){
         btn.append(bin);
         DomItems.projects.appendChild(btn);
     }
-}
-
-function submitProjectForm(){
-    let DomItems = getDom();
-    let title = DomItems.projectInputTitle;
-    let id = getId();
-    title = title.value;
-
-    createProject(id,title,[]);
-    setId(++id);
-    closeDialog();
 }
 
 function editProject(){
@@ -142,6 +136,76 @@ function editProject(){
     renderProjects();
     closeDialog();
 }
+
+function submitProjectForm(){
+    let DomItems = getDom();
+    let title = DomItems.projectInputTitle;
+    let id = getId();
+    title = title.value;
+
+    createProject(id,title,[]);
+    setId(++id);
+    closeDialog();
+}
+
+
+//task
+function submitTaskForm(lasttarget){
+
+    let title = document.querySelector("#projectInputTitle");
+    let description = document.querySelector("#description");
+    let dueDate = document.querySelector("#dueDate");
+    let priority = document.querySelector("#priority");
+    createItem(title.value,description.value,format(new Date(dueDate.value), "MM/dd/yyyy"),priority.value,false,lasttarget.id);
+    closeDialog();
+}
+function deleteTask(itemId,lasttarget){
+    let projects = getProjects();
+    for(let i=0;i<projects.length;i++){
+        if(projects[i].id==lasttarget.id ){
+            for(let j=0;j<projects[i].todo.length;j++)
+                if(projects[i].todo[j].itemId == itemId){
+                    projects[i].todo.splice(j,1);
+                }
+        }
+    }
+    setProjects(projects);
+
+}
+function editTask(itemId,lasttarget){
+    let projects = getProjects();
+    for(let i=0;i<projects.length;i++){
+        if(projects[i].id == lasttarget.id){
+            for(let j=0;j<projects[i].todo.length;j++){
+                if(projects[i].todo[j].itemId == itemId){
+                    createForm('editTask',projects[i].todo[j]);
+                }
+            }
+        }
+    }
+}
+function editTaskForm(itemId,lasttarget){
+    let title = document.querySelector("#projectInputTitle");
+    let description = document.querySelector("#description");
+    let dueDate = document.querySelector("#dueDate");
+    let priority = document.querySelector("#priority");
+    let projects = getProjects();
+    for(let i=0;i<projects.length;i++){
+        if(projects[i].id == lasttarget.id){
+            for(let j=0;j<projects[i].todo.length;j++){
+                if(projects[i].todo[j].itemId == itemId){
+                    projects[i].todo[j].title = title.value;
+                    projects[i].todo[j].description = description.value;
+                    projects[i].todo[j].dueDate = format(new Date(dueDate.value), "MM/dd/yyyy");
+                    projects[i].todo[j].priority = priority.value;
+                    setProjects(projects);
+                }
+            }
+        }
+    }
+    closeDialog();
+}
+
 
 function renderTasks(target){
     let DomItems = getDom();
@@ -202,6 +266,13 @@ function renderTask(task,content){
     let taskDivText = document.createElement("div");
     taskDivText.textContent = task.title;
 
+    let priority = document.createElement("div");
+    priority.classList.add("priority");
+    priority.textContent = task.priority;
+
+    let description = document.createElement("div");
+    description.classList.add("description");
+    description.textContent = task.description;
 
     let dueDate = document.createElement("div");
     dueDate.classList.add("dueDate");
@@ -217,6 +288,8 @@ function renderTask(task,content){
 
 
     taskDiv.appendChild(taskDivText);
+    taskDiv.appendChild(description);
+    taskDiv.appendChild(priority);
     taskDiv.appendChild(dueDate);
     taskDiv.appendChild(editTask);
     taskDiv.appendChild(deleteTask);
@@ -225,4 +298,4 @@ function renderTask(task,content){
 }
 
 
-export {renderTask,renderTasks,editProject,createItem,deleteItem,deleteProject,createProject,renderProjects,submitProjectForm,};
+export {editTaskForm,editTask,deleteTask,renderTask,renderTasks,editProject,createItem,deleteItem,deleteProject,createProject,renderProjects,submitProjectForm,submitTaskForm};

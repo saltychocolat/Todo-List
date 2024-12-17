@@ -1,7 +1,7 @@
 
 import { compareAsc, format } from "date-fns";
-import {init,getId,getList,setId,setList,setProjects,getProjects} from "./localStorage";
-import {renderTask,renderTasks,editProject,deleteProject,createItem,deleteItem,createProject,renderProjects,submitProjectForm } from "./Methods";
+import {init,getId,getList,setId,setList,setProjects,getProjects, getTemp, setTemp} from "./localStorage";
+import {editTask,editTaskForm,deleteTask,submitTaskForm,renderTask,renderTasks,editProject,deleteProject,createItem,deleteItem,createProject,renderProjects,submitProjectForm } from "./Methods";
 import {getDom,closeDialog,createForm} from "./DomMethods";
 
 import "../css/dialog.css";
@@ -15,7 +15,7 @@ import trashIconPath from "../../icons/trash-solid.svg";
 
 let lasttarget = null;
 const actionMap = {
-    delete: (target) => deleteProject(target.parentElement.id),
+    deleteProject: (target) => deleteProject(target.parentElement.id),
     deleteTask:(target)=>{
         deleteTask(target.parentElement.id,lasttarget)
         renderTasks(lasttarget);
@@ -23,20 +23,37 @@ const actionMap = {
     closeForm: closeDialog,
     cancelForm: closeDialog,
     createProject: (target  ) => createForm("add",target),
-    editImg: (target) => createForm("edit",target),
-    createTask:(target)=>{
-        createForm("task",target)
-    },
     submitProjectForm: () => {
         submitProjectForm();
         renderProjects();
+        
     },
+
+    createTask:(target)=>{
+        createForm("task",target)
+    },
+
+    //icon edit
+    editProject: (target) => createForm("edit",target),
+    editTask:(target)=>{
+        let temp = getTemp();
+        temp.itemId = target.parentElement.id;
+        setTemp(temp);
+        editTask(target.parentElement.id,lasttarget);
+    },
+    
+    //buton edit din form
     editProjectForm:(target)=>{
         editProject();
         renderTasks(target)
     },
+    editTaskForm:()=>{
+        editTaskForm(getTemp().itemId,lasttarget);
+        renderTasks(lasttarget);
+    },
+
     submitTaskForm:()=>{
-        submitTaskForm();
+        submitTaskForm(lasttarget);
         renderTasks(lasttarget);
     },
     buttonTask:(target)=>{
@@ -67,28 +84,7 @@ document.addEventListener("click", function(event) {
     }
 });
 
-function submitTaskForm(){
 
-    let title = document.querySelector("#projectInputTitle");
-    let description = document.querySelector("#description");
-    let dueDate = document.querySelector("#dueDate");
-    let priority = document.querySelector("#priority");
-    createItem(title.value,description.value,dueDate.value,priority.value,false,lasttarget.id);
-    closeDialog();
-}
-function deleteTask(itemId,lasttarget){
-    let projects = getProjects();
-    for(let i=0;i<projects.length;i++){
-        if(projects[i].id==lasttarget.id ){
-            for(let j=0;j<projects[i].todo.length;j++)
-                if(projects[i].todo[j].itemId == itemId){
-                    projects[i].todo.splice(j,1);
-                }
-        }
-    }
-    setProjects(projects);
-
-}
 
 init();
 

@@ -53,7 +53,7 @@ form{
     font-size: 20px;
     margin-bottom: 10px;
 }
-input{
+input,select{
     height: 35px;
     margin-left: 30px;
     margin-right: 30px;
@@ -84,7 +84,7 @@ input{
     margin-right: 20px;
 }
 
-.submitProjectForm,.editProjectForm,.submitTaskForm{
+.submitProjectForm,.editProjectForm,.submitTaskForm,.editTaskForm{
     color: white;
     border-radius: 5px;
     font-size: 15px;
