@@ -3,6 +3,8 @@ Index.js
     init al localstorage
 
 Methods.js
+    grija la editTask/editTaskForm  si editProject/editProjectForm ! 
+        primul e apasarea functiei de edit al doilea e apasarea butonului de submit la formul edit respectiv
     declararea clasei item si proiect 
     proiect 
         Id
@@ -20,12 +22,12 @@ DomMethods.js
 
 localstorage.js
     init al storageului
-    functii de get si set pentru Proiecete ,Id-pentru numerotarea proiectelor ,Temp pentru salvarea numelui folosit inainte de editarea acestuia
+    functii de get si set pentru Proiecete ,Id-pentru numerotarea proiectelor ,
+    Temp pentru salvarea numelui folosit inainte de editarea acestuia si taskului inainte de editarea acestuia;
 
 
 
 !!!! todo
 
 requiered/ check data descriptie titlu
-edit task - createform(edit)
 categorii - sortare datefn dupa data
