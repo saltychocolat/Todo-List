@@ -251,14 +251,14 @@ function renderTasks(target){
     content.appendChild(tasksHeader);
     if(todo){
         for(let i=0;i<todo.length;i++)
-            renderTask(todo[i],content);
+            renderTask(todo[i],content,true);
 
     }
     DomItems.wrapper.appendChild(content);
 
 }
 
-function renderTask(task,content){
+function renderTask(task,content,mode){
     let taskDiv = document.createElement("div");
     taskDiv.classList.add("taskDiv");
     taskDiv.id = task.itemId;
@@ -278,21 +278,27 @@ function renderTask(task,content){
     dueDate.classList.add("dueDate");
     dueDate.textContent = task.dueDate;
 
-    let editTask = document.createElement("img");
-    editTask.classList.add("editTask");
-    editTask.src =  screwIconPath;
+    let editImg,deleteImg;
+    if(mode==true){
+    editImg = document.createElement("img");
+    editImg.classList.add("editTask");
+    editImg.src =  screwIconPath;
 
-    let deleteTask = document.createElement("img");
-    deleteTask.classList.add("deleteTask");
-    deleteTask.src = trashIconPath;
+    deleteImg = document.createElement("img");
+    deleteImg.classList.add("deleteTask");
+    deleteImg.src = trashIconPath;
+    }
 
 
     taskDiv.appendChild(taskDivText);
     taskDiv.appendChild(description);
     taskDiv.appendChild(priority);
     taskDiv.appendChild(dueDate);
-    taskDiv.appendChild(editTask);
-    taskDiv.appendChild(deleteTask);
+    if(mode==true){
+    taskDiv.appendChild(editImg);
+    taskDiv.appendChild(deleteImg);
+}
+
 
     content.appendChild(taskDiv);
 }

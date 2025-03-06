@@ -133,6 +133,9 @@ function createForm(mode,target){
             dueDate.type = "date";
             dueDate.id = "dueDate";  // Câmpul pentru data scadentă
             dueDate.required = true;
+            let today = new Date().toISOString().split("T")[0]; // Gets YYYY-MM-DD
+            dueDate.value = today;
+           
 
             label4 = document.createElement("label");
             label4.classList.add("label");
