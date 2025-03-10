@@ -7,7 +7,7 @@ import trashIconPath from "../../icons/trash-solid.svg";
 import { format, compareAsc } from "date-fns";
 
 
-
+let category = {"All Tasks":(content)=>renderAllTasks(content),"Today":(content)=>renderTodayTasks(content),"Week":(content)=>renderWeekTasks(content),"Priority":(content)=>renderPriorityTasks(content)}
 
 
 class todoItem{
@@ -132,22 +132,43 @@ function editProject(){
             projects[i].name = DomItems.projectInputTitle.value;
         }
     }
-    setProjects(projects);
-    renderProjects();
-    closeDialog();
+    if(validateForm(DomItems.projectInputTitle,null)){
+        setProjects(projects);
+        renderProjects();
+        closeDialog();
+    }
 }
 
 function submitProjectForm(){
     let DomItems = getDom();
     let title = DomItems.projectInputTitle;
     let id = getId();
-    title = title.value;
 
-    createProject(id,title,[]);
-    setId(++id);
-    closeDialog();
+    if(validateForm(title,null)){
+        createProject(id,title.value,[]);
+        setId(++id);
+        closeDialog();
+    }
+
 }
 
+
+function validateForm(title,dueDate){
+    let today = new Date();
+    let formattedToday = today.toISOString().split('T')[0];
+    if(title.value == "")
+        title.setCustomValidity("Title cant be emtpy!");
+    else
+        title.setCustomValidity("");
+    if(dueDate){
+        if(dueDate.value < formattedToday)
+            dueDate.setCustomValidity("Date can't be in the past!");
+        else
+            dueDate.setCustomValidity("");
+        return (dueDate.reportValidity() && title.reportValidity())
+    }
+    return title.reportValidity();
+}
 
 //task
 function submitTaskForm(lasttarget){
@@ -156,8 +177,11 @@ function submitTaskForm(lasttarget){
     let description = document.querySelector("#description");
     let dueDate = document.querySelector("#dueDate");
     let priority = document.querySelector("#priority");
-    createItem(title.value,description.value,format(new Date(dueDate.value), "MM/dd/yyyy"),priority.value,false,lasttarget.id);
-    closeDialog();
+
+    if ( validateForm(title,dueDate)){
+            createItem(title.value,description.value,format(new Date(dueDate.value), "MM/dd/yyyy"),priority.value,false,lasttarget.id);
+            closeDialog();
+    }
 }
 function deleteTask(itemId,lasttarget){
     let projects = getProjects();
@@ -198,12 +222,15 @@ function editTaskForm(itemId,lasttarget){
                     projects[i].todo[j].description = description.value;
                     projects[i].todo[j].dueDate = format(new Date(dueDate.value), "MM/dd/yyyy");
                     projects[i].todo[j].priority = priority.value;
-                    setProjects(projects);
+                    if(validateForm(title,dueDate)){
+                        setProjects(projects);
+                        closeDialog();
+                    }
                 }
             }
         }
     }
-    closeDialog();
+
 }
 
 
@@ -303,5 +330,89 @@ function renderTask(task,content,mode){
     content.appendChild(taskDiv);
 }
 
+function renderCategory(target){
+    let DomItems = getDom();
+    if(DomItems.content)
+        DomItems.content.remove();
+    let content = document.createElement("div");
+    content.classList.add("content");
+    
+    let contentTitle = document.createElement("div");
+    contentTitle.classList.add("contentTitle");
+    contentTitle.textContent = target.textContent.trim();
 
-export {editTaskForm,editTask,deleteTask,renderTask,renderTasks,editProject,createItem,deleteItem,deleteProject,createProject,renderProjects,submitProjectForm,submitTaskForm};
+    let tasksHeader = document.createElement("div");
+    tasksHeader.classList.add("tasksHeader");
+
+    let tasksTitle = document.createElement("div");
+    tasksTitle.classList.add("tasksTitle");
+
+    tasksHeader.appendChild(tasksTitle);
+
+    content.appendChild(contentTitle);
+    content.appendChild(tasksHeader);
+    category[target.textContent.trim()](content);
+
+    tasksTitle.textContent= `Tasks(${content.childNodes.length-2})`
+
+}
+function renderAllTasks(content){
+    let DomItems = getDom();
+    for(let i=0;i<getProjects().length;i++){
+        let todo = getProjects()[i].todo;
+        for(let i=0;i<todo.length;i++)
+            renderTask(todo[i],content,false);
+    }
+    DomItems.wrapper.appendChild(content);
+}
+
+function renderTodayTasks(content){
+    let DomItems = getDom();
+    for(let i=0;i<getProjects().length;i++){
+        let todo = getProjects()[i].todo;
+        for(let i=0;i<todo.length;i++){ 
+            let today = new Date();
+            if(todo[i].dueDate==`${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}/${today.getFullYear()}`)
+                renderTask(todo[i],content,false);
+        }
+    }
+    DomItems.wrapper.appendChild(content);
+}
+function renderWeekTasks(content){
+    let DomItems = getDom();
+    for(let i=0;i<getProjects().length;i++){
+        let todo = getProjects()[i].todo;
+        for(let i=0;i<todo.length;i++){ 
+            let today = new Date();
+            let oneWeekLater = new Date();
+            oneWeekLater.setDate(today.getDate() + 7);
+            let [month, day, year] = todo[i].dueDate.split('/').map(Number);
+            let dueDateObj = new Date(year, month - 1, day);
+            if(dueDateObj >= today && dueDateObj <= oneWeekLater)
+                renderTask(todo[i],content,false);
+        }
+    }
+    DomItems.wrapper.appendChild(content);
+}
+
+function renderPriorityTasks(content){
+    let DomItems = getDom();
+    for(let i=0;i<getProjects().length;i++){
+        let todo = getProjects()[i].todo;
+        for(let i=0;i<todo.length;i++)
+            if(todo[i].priority=="High")
+                renderTask(todo[i],content,false)
+        for(let i=0;i<todo.length;i++)
+            if(todo[i].priority=="Medium")
+                renderTask(todo[i],content,false)
+        for(let i=0;i<todo.length;i++)
+            if(todo[i].priority=="Low")
+                renderTask(todo[i],content,false)
+    }
+    DomItems.wrapper.appendChild(content);
+}
+
+export {renderCategory,renderTask,renderTasks,
+editTaskForm,editTask,deleteTask,editProject,
+createItem,deleteItem,deleteProject,createProject,renderProjects,
+submitProjectForm,submitTaskForm};
